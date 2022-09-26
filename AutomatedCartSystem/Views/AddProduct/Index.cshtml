@@ -1,0 +1,225 @@
+﻿<html lang="en">
+
+<head>
+	<title>Add Product</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="css/style.css">
+
+
+</head>
+
+<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<!-- <h2 class="heading-section">Add Product</h2> -->
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-12">
+					<div class="wrapper">
+
+						<div class="row">
+							<div class="col-md-3">
+								<div id="qrcode" class="mt-5 text-center">
+
+								</div>
+							</div>
+							<div class="col-md-9">
+								<div class="row no-gutters">
+									<div class="col-lg-12 col-md-12 order-md-last d-flex align-items-stretch">
+										<div class="contact-wrap w-100 p-md-5 p-4">
+											<h3 class="mb-4">Add Product</h3>
+											<div id="form-message-warning" class="mb-4"></div>
+											<div id="form-message-success" class="mb-4">
+												Product is added!
+											</div>
+											<form method="POST" id="contactForm" action="/Api/InsertProduct" name="contactForm" class="contactForm">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="label" for="name">Product Name</label>
+															<input type="text" class="form-control" name="Name"
+																id="name" placeholder="Product Title" required>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="label" for="email">Product Category</label>
+															@*<input type="text" class="form-control" name="Category"
+																id="email" placeholder="Product Category" required>*@
+																<select class="form-control" id="Category" name="Category" aria-label="Default select example">
+																  <option value="" selected>Select Categories</option>
+																  <option value="Meat & Fish">Meat & Fish</option>
+																  <option value="Vegetables and fruit">Vegetables and fruit</option>
+																  <option value="Freezer">Freezer</option>
+																  <option value="Bread & bread spreads">Bread & bread spreads</option>
+																  <option value="Dried Goods">Dried Goods</option>
+																  <option value="Snacks">Snacks</option>
+																  <option value="Care Products">Care Products</option>
+																</select>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label class="label" for="subject">Product Price</label>
+															<input type="number" class="form-control" name="Price"
+																id="Price" placeholder="Product Price" required>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															<label class="label" for="#">Product Description</label>
+															<textarea name="Discription" class="form-control" id="message"
+																cols="30" rows="4" placeholder="Product Description" required></textarea>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="label" for="subject">Product Quantity</label>
+															<input type="number" class="form-control" name="Quantity"
+																id="pquantity" placeholder="Product Quantity" required>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label class="label" for="subject">Product Barcode</label>
+															<input type="text" class="form-control" name="Barcode"
+																id="pbarcode" placeholder="Product Barcode" required>
+														</div>
+													</div>
+													<div class="col-md-12">
+														<div class="form-group">
+															@*<input type="button" 
+																class="btn btn-primary" id="btnsubmit" value="send message">*@
+																@*<button type="submit" class="btn btn-primary" id="btnsubmit">Add Product</button>*@
+																<input type="button" class="btn btn-primary" value="Add Product" id="btnsubmit" />
+															<div class="submitting"></div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	
+	<script>
+
+window.addEventListener('load', function() {//cahala
+	$("#btnsubmit").click(function () {
+
+				console.log("generateqr Called");
+
+				if(document.getElementById("name").value == ""){
+                    document.getElementById("name").focus();
+                    alert("Product Name is Mendatory");
+				}
+
+				if(document.getElementById("name").value == ""){
+                    document.getElementById("name").focus();
+                    alert("Product Name is Mendatory");
+				}
+				if(document.getElementById("Category").value == ""){
+					document.getElementById("Category").focus();
+                    alert("Product Category is Mendatory");
+				}
+				if(document.getElementById("Price").value == ""){
+					document.getElementById("Price").focus();
+                    alert("Product Price is Mendatory");
+				}
+				if(document.getElementById("pquantity").value == ""){
+					document.getElementById("pquantity").focus();
+                    alert("Product Quantity is Mendatory");
+				}
+				
+				else{
+					let data = $('#contactForm').serialize();
+
+				$.ajax({
+					type: 'Post',
+					url: 'https://localhost:44302/api/InsertProduct',
+					data: data,
+					success: function (response) {
+						alert("Product Successfully Added");
+					},
+					error: function () {
+						alert("Data Not Added");
+					}
+				})
+
+			var barcode = document.getElementById('pbarcode').value;
+            var name = "http://www.automatedsystemcart.somee.com/api/Product/GetByBarcode?barcode=" + barcode.toString();
+
+			var url = "https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=" + name.toString();
+
+			var ifr = `<iframe src="${url}" height="300" width="300"></iframe>`;
+
+			document.getElementById('qrcode').innerHTML = ifr;
+				}
+				
+		})
+})
+
+		//function generateqr() {
+			
+  //          console.log("generateqr Called");
+
+		//		let data = $('#contactForm').serialize();
+
+		//		$.ajax({
+		//			type: 'Post',
+		//			url: 'http://www.automatedcartsystem.somee.com/api/InsertProduct'
+		//			data: data,
+		//			success: function (responce) {
+		//				alert("Product Successfully Added");
+		//			},
+		//			error: function () {
+		//				alert("Data Not Added");
+		//			}
+		//		})
+
+		//	var barcode = document.getElementById('pbarcode').value;
+  //          var name = "http://www.automatedcartsystem.somee.com/api/Product/GetByBarcode?barcode=" + barcode.toString();
+
+		//	//console.log('ProductName: ' + name + " " + email + " " + subject + " " + message);
+
+		//	//var url = "https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=ProductName:" +
+		//	//name + "%0a ProductCategory: " + email + " Price: " + subject + " Description: " + message + " Quantity: " + quantity + " Barcode: " + barcode;
+
+		//	var url = "https://chart.googleapis.com/chart?cht=qr&chs=250x250&chl=" + name.toString();
+
+
+		//	var ifr = `<iframe src="${url}" height="300" width="300"></iframe>`;
+
+		//	document.getElementById('qrcode').innerHTML = ifr;
+		//}
+
+	</script>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.validate.min.js"></script>
+	<script src="js/main.js"></script>
+
+
+</body>
+
+</html>
